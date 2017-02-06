@@ -3,11 +3,11 @@ package algorithm;
 public class Settings {
 	
 	 //Newyork dataset
-	public static String grid_info_location = "E:\\University\\PhD\\Publication\\Dataset\\index\\grid-info.txt"; 
-	public static String grid_index_location = "E:\\University\\PhD\\Publication\\Dataset\\index\\newyork\\grid";
-	public static String rtree_index_location = "E:\\University\\PhD\\Publication\\Dataset\\index\\newyork\\poi";
-	public static String trip_ids = "E:\\University\\PhD\\Publication\\Dataset\\files\\newyork_trips.txt";
-	public static String points_location = "E:\\University\\PhD\\Publication\\Dataset\\files\\newyork_points.txt";
+	public static String grid_info_location = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/index/grid-info.txt"; 
+	public static String grid_index_location = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/index/newyork/grid";
+	public static String rtree_index_location = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/index/newyork/poi";
+	public static String trip_ids = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/files/newyork_trips.txt";
+	public static String points_location = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/files/newyork_points.txt";
 	/*
 	public static String grid_info_location = "E:\\University\\PhD\\Publication\\Dataset\\index\\la-grid-info.txt";
 	public static String grid_index_location = "E:\\University\\PhD\\Publication\\Dataset\\index\\la\\grid";

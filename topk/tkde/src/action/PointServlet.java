@@ -46,7 +46,7 @@ public class PointServlet extends HttpServlet {
 		String output = "[";
 		int q = Settings.q;
 		q = 6;
-		InputStreamReader read = new InputStreamReader(new FileInputStream("E:\\University\\PhD\\Publication\\Dataset\\query\\newyork\\low\\"+q+"-locations.txt"), "utf-8");
+		InputStreamReader read = new InputStreamReader(new FileInputStream("/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/newyork/low/"+q+"-locations.txt"), "utf-8");
 		BufferedReader reader = new BufferedReader(read);
 		String line;
 		

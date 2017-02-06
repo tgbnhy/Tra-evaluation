@@ -14,9 +14,9 @@ import java.util.Queue;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.store.FSDirectory;
+//import org.apache.lucene.index.DirectoryReader;
+//import org.apache.lucene.index.IndexReader;
+//import org.apache.lucene.store.FSDirectory;
 
 import algorithm.ANN;
 import algorithm.Element;
