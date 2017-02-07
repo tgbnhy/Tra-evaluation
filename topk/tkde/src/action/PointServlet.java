@@ -32,7 +32,7 @@ public class PointServlet extends HttpServlet {
      */
     public PointServlet() throws SQLException {
         //super();
-    	ds = new Dataset("root", "");
+    	ds = new Dataset("root", "rmit12345");
 		conn = ds.Connect();
         // TODO Auto-generated constructor stub
     }

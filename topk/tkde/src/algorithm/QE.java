@@ -32,7 +32,7 @@ public class QE {
 	public QE(RTree tree, String file) throws SQLException{
 		this.tree = tree;
 		this.trips = this.readTrips(file);
-		this.ds = new Dataset("root", "");
+		this.ds = new Dataset("root", "rmit12345");
 		this.conn = ds.Connect();	
 	}
 	

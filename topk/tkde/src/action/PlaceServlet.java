@@ -57,7 +57,7 @@ public class PlaceServlet extends HttpServlet {
     public PlaceServlet() throws Exception {
         //super();
         // TODO Auto-generated constructor stub
-    	ds = new Dataset("root", "");
+    	ds = new Dataset("root", "rmit12345");
 		conn = ds.Connect();
 		
 		String index_file = Settings.rtree_index_location;

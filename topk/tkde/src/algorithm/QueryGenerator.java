@@ -25,7 +25,7 @@ public class QueryGenerator {
 	public static void main(String[] args)throws Exception
 	{
 		String query_file = "E:\\University\\PhD\\Publication\\Dataset\\query\\newyork\\low";
-		Dataset ds = new Dataset("root", "");
+		Dataset ds = new Dataset("root", "rmit12345");
 		Connection conn = ds.Connect();
 		int q = Settings.q;
 		String ids = ds.loadTrajectoryIds(conn, q);

@@ -48,7 +48,7 @@ public class Test {
 
 	public static void main(String[] args)throws Exception
 	{
-		Dataset ds = new Dataset("root", "");
+		Dataset ds = new Dataset("root", "rmit12345");
 		Connection conn = ds.Connect();
 		
 		String index_file = Settings.rtree_index_location;
