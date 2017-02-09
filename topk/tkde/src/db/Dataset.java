@@ -53,7 +53,7 @@ public class Dataset {
     public String loadTrajectory(Connection conn, String ids) throws SQLException{
         
     	String result = "";
-    	String sql = "SELECT distinct latitude, longitude, trip_id from tb_newyork_dataset where trip_id in ("+ids+") order by id";
+    	String sql = "SELECT distinct latitude, longitude, trip_id, id from tb_newyork_dataset where trip_id in ("+ids+") order by id";
         //System.out.println(sql);
         PreparedStatement st = conn.prepareStatement(sql);
         String current = "";

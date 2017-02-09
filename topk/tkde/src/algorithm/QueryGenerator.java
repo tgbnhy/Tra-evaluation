@@ -24,18 +24,18 @@ public class QueryGenerator {
 
 	public static void main(String[] args)throws Exception
 	{
-		String query_file = "E:\\University\\PhD\\Publication\\Dataset\\query\\newyork\\low";
+		String query_file = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/newyork/low";
 		Dataset ds = new Dataset("root", "rmit12345");
 		Connection conn = ds.Connect();
-		int q = Settings.q;
+		int q = Settings.q;//number of query points
 		String ids = ds.loadTrajectoryIds(conn, q);
 		String []arr = ids.split(",");
 		System.out.println("Result count: "+arr.length);
-		TreeSet<Integer> trips = randomPicker(arr.length, 1000); 
+		TreeSet<Integer> trips = randomPicker(arr.length, 1000); //randomly pick 1000 integer ?
 		//System.out.println(trips.size());
 		
 		
-		File file = new File(query_file+"\\"+q+"-locations.txt");
+		File file = new File(query_file+"/"+q+"-locations.txt");
 		FileWriter fw = new FileWriter(file.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
 		

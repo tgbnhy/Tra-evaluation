@@ -52,7 +52,7 @@ public class Test {
 		Connection conn = ds.Connect();
 		
 		String index_file = Settings.rtree_index_location;
-		PropertySet ps1 = new PropertySet();
+		PropertySet ps1 = new PropertySet();//ps1 is hash-map stores file info
 		ps1.setProperty("FileName", index_file + ".rtree");
 		IStorageManager diskfile = new DiskStorageManager(ps1);
 
