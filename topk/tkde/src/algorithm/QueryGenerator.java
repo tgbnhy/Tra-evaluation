@@ -31,7 +31,7 @@ public class QueryGenerator {
 		String ids = ds.loadTrajectoryIds(conn, q);
 		String []arr = ids.split(",");
 		System.out.println("Result count: "+arr.length);
-		TreeSet<Integer> trips = randomPicker(arr.length, 1000); //randomly pick 1000 integer ?
+		TreeSet<Integer> trips = randomPicker(arr.length, 1000); //randomly pick 1000 integer 
 		//System.out.println(trips.size());
 		
 		
