@@ -48,6 +48,10 @@ public class Test {
 
 	public static void main(String[] args)throws Exception
 	{
+		File ressult_file = new File("/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/result.txt");
+		FileWriter fw = new FileWriter(ressult_file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		
 		Dataset ds = new Dataset("root", "rmit12345");
 		Connection conn = ds.Connect();
 		
@@ -103,25 +107,40 @@ public class Test {
 		long startTime = System.currentTimeMillis();
 		String ids = alg.computeIKNN(query, points);
 		long stopTime = System.currentTimeMillis();
+		bw.write("IKNN query runtime: " + (stopTime - startTime) + " IO: " + alg.iotime);
+		bw.newLine();
+		bw.write("ID: " + ids);
+		bw.newLine();
 		System.out.println("IKNN query runtime: " + (stopTime - startTime) + " IO: " + alg.iotime);
 		System.out.println("ID: " + ids);
 		
 		startTime = System.currentTimeMillis();
 		ids = alg1.computeGH(query, points);
 		stopTime = System.currentTimeMillis();
+		bw.write("GH query runtime: " + (stopTime - startTime) + " IO: " + alg1.iotime);
+		bw.newLine();
+		bw.write("ID: " + ids);
+		bw.newLine();
 		System.out.println("GH query runtime: " + (stopTime - startTime) + " IO: " + alg1.iotime);
 		System.out.println("ID: " + ids);
 		
 		startTime = System.currentTimeMillis();
 		ids = alg2.computeQE(query, points);
 		stopTime = System.currentTimeMillis();
-		System.out.println("QE query runtime: " + (stopTime - startTime) + " IO: " + alg2
-				.iotime);
+		bw.write("QE query runtime: " + (stopTime - startTime) + " IO: " + alg2.iotime);
+		bw.newLine();
+		bw.write("ID: " + ids);
+		bw.newLine();
+		System.out.println("QE query runtime: " + (stopTime - startTime) + " IO: " + alg2.iotime);
 		System.out.println("ID: " + ids);		
 		
 		startTime = System.currentTimeMillis();
 		ids = alg3.computeSRA(query, points);
 		stopTime = System.currentTimeMillis();
+		bw.write("SRA query runtime: " + (stopTime - startTime) + " IO: " + alg3.iotime);
+		bw.newLine();
+		bw.write("ID: " + ids);
+		bw.newLine();
 		System.out.println("SRA query runtime: " + (stopTime - startTime) + " IO: " + alg3.iotime);
 		System.out.println("ID: " + ids);
 		
@@ -129,8 +148,16 @@ public class Test {
 		startTime = System.currentTimeMillis();
 		ids = alg4.computeSGRA(query, points);
 		stopTime = System.currentTimeMillis();
+		bw.write("SGRA query runtime: " + (stopTime - startTime) + " IO: " + alg4.iotime);
+		bw.newLine();
+		bw.write("ID: " + ids);
+		bw.newLine();
+		bw.close();
 		System.out.println("SGRA query runtime: " + (stopTime - startTime) + " IO: " + alg4.iotime);
 		System.out.println("ID: " + ids);
+		
+		
+		
 		/*
 		Dataset ds = new Dataset("root", "");
 		Connection conn = ds.Connect();
