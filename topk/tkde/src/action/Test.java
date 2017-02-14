@@ -28,9 +28,12 @@ import algorithm.SRA;
 import algorithm.Settings;
 import db.Dataset;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 
 import spatialindex.grid.Grid;
 import spatialindex.rtree.RTree;
@@ -73,7 +76,14 @@ public class Test {
 		Grid g = new Grid(Settings.dimension, Settings.size);
 		SGRA alg4 =  new SGRA(g, file);
 		//String locs = request.getParameter("locs");
-		String locs = "40.728328704833984,-73.99295806884766,40.72578048706055,-73.99031829833984";
+		
+		String FilePath = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/newyork/low/4-locations.txt";
+		InputStreamReader read = new InputStreamReader(new FileInputStream(FilePath), "utf-8");
+		BufferedReader reader = new BufferedReader(read);
+		String line = reader.readLine();
+		
+		String locs = line;
+		//String locs = "40.728328704833984,-73.99295806884766,40.72578048706055,-73.99031829833984";
 		String []pois = locs.split(",");
 		
 		int num = pois.length/2;
@@ -107,53 +117,53 @@ public class Test {
 		long startTime = System.currentTimeMillis();
 		String ids = alg.computeIKNN(query, points);
 		long stopTime = System.currentTimeMillis();
-		bw.write("IKNN query runtime: " + (stopTime - startTime) + " IO: " + alg.iotime);
+		bw.write("IKNN query runtime: " + (stopTime - startTime) + " \nIO: " + alg.iotime);
 		bw.newLine();
 		bw.write("ID: " + ids);
 		bw.newLine();
-		System.out.println("IKNN query runtime: " + (stopTime - startTime) + " IO: " + alg.iotime);
+		System.out.println("IKNN query runtime: " + (stopTime - startTime) + " \nIO: " + alg.iotime);
 		System.out.println("ID: " + ids);
 		
 		startTime = System.currentTimeMillis();
 		ids = alg1.computeGH(query, points);
 		stopTime = System.currentTimeMillis();
-		bw.write("GH query runtime: " + (stopTime - startTime) + " IO: " + alg1.iotime);
+		bw.write("GH query runtime: " + (stopTime - startTime) + " \nIO: " + alg1.iotime);
 		bw.newLine();
 		bw.write("ID: " + ids);
 		bw.newLine();
-		System.out.println("GH query runtime: " + (stopTime - startTime) + " IO: " + alg1.iotime);
+		System.out.println("GH query runtime: " + (stopTime - startTime) + " \nIO: " + alg1.iotime);
 		System.out.println("ID: " + ids);
 		
 		startTime = System.currentTimeMillis();
 		ids = alg2.computeQE(query, points);
 		stopTime = System.currentTimeMillis();
-		bw.write("QE query runtime: " + (stopTime - startTime) + " IO: " + alg2.iotime);
+		bw.write("QE query runtime: " + (stopTime - startTime) + " \nIO: " + alg2.iotime);
 		bw.newLine();
 		bw.write("ID: " + ids);
 		bw.newLine();
-		System.out.println("QE query runtime: " + (stopTime - startTime) + " IO: " + alg2.iotime);
+		System.out.println("QE query runtime: " + (stopTime - startTime) + " \nIO: " + alg2.iotime);
 		System.out.println("ID: " + ids);		
 		
 		startTime = System.currentTimeMillis();
 		ids = alg3.computeSRA(query, points);
 		stopTime = System.currentTimeMillis();
-		bw.write("SRA query runtime: " + (stopTime - startTime) + " IO: " + alg3.iotime);
+		bw.write("SRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg3.iotime);
 		bw.newLine();
 		bw.write("ID: " + ids);
 		bw.newLine();
-		System.out.println("SRA query runtime: " + (stopTime - startTime) + " IO: " + alg3.iotime);
+		System.out.println("SRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg3.iotime);
 		System.out.println("ID: " + ids);
 		
 		
 		startTime = System.currentTimeMillis();
 		ids = alg4.computeSGRA(query, points);
 		stopTime = System.currentTimeMillis();
-		bw.write("SGRA query runtime: " + (stopTime - startTime) + " IO: " + alg4.iotime);
+		bw.write("SGRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg4.iotime);
 		bw.newLine();
 		bw.write("ID: " + ids);
 		bw.newLine();
 		bw.close();
-		System.out.println("SGRA query runtime: " + (stopTime - startTime) + " IO: " + alg4.iotime);
+		System.out.println("SGRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg4.iotime);
 		System.out.println("ID: " + ids);
 		
 		

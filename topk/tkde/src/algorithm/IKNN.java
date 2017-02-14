@@ -22,7 +22,7 @@ import spatialindex.rtree.*;
 public class IKNN {
 	private RTree tree;
 	private TreeMap<Double,Point> T;
-	private HashMap<String,String> trips;
+	private HashMap<String,String> trips; // trips stores hash map of (point, trajectory ids)
 	private Connection conn = null; 
 	private Dataset ds = null;
 	public long iotime;
@@ -32,7 +32,7 @@ public class IKNN {
 		// Initializing values
 		this.tree = tree;
 		this.trips = this.readTrips(file);
-		this.ds = d;
+		this.ds = d; //database
 		this.conn = c;
 	}
 	
@@ -50,6 +50,7 @@ public class IKNN {
 	    if(trips.containsKey(tmp)){
 	    	String ids = trips.get(tmp);
 	    	if(!ids.contains(arr[0])){
+	    		
 	    		trips.put(tmp, trips.get(tmp)+","+arr[0]);
 	    	}    	
 	    }
@@ -64,6 +65,8 @@ public class IKNN {
 	  return trips;
 	}
 	
+	//argument "query" is the max and min coordinate point in the map
+	//argument "points" stores the information about query points
 	public String computeIKNN(Region query, Point []points) throws SQLException{
 		int k = Settings.k;
 		iotime = 0;
@@ -76,30 +79,31 @@ public class IKNN {
 		for (int i = 0; i < points.length; i++) {
 			UB_points.add(null);
 		}
-		int index = 0;
+		int index = 0;//upper bound index
 		int iteration=0;
-		int counter = 0;
-		int check = 0;
+		int counter = 0;// = 3 * lambda ???
+		int check = 0;//check whether lower bound is bigger than upper bound
 		while (check == 0){
 			
 			for (int i = 0; i < points.length; i++) {
 				// Starts search from first query points and iterates
 				index = i;
-				ArrayList<Point> S = new ArrayList<Point>();
+				ArrayList<Point> S = new ArrayList<Point>();//store lambda-NN points with regard to a specific query point
 				long startTime = System.currentTimeMillis();
-				// finds lambda nearest points to given query point
+				// finds lambda nearest points to given query point and store them in S
 				this.getIntersectingPoints(S, lambda, points[i]);
 				long stopTime = System.currentTimeMillis();
 				long elapsedTime = stopTime - startTime;
 				iotime += elapsedTime;
 				counter = S.size();
-				//System.out.println("Points: " + S.size());
+				// System.out.println("Points: " + S.size());
 				// stores the farthest point as an upper bound 
 				for (Point point : S) {
 					if(UB_points.get(index) == null){
 						UB_points.set(index, point);
 					}
 					else{
+						//compareDistance() return true is distance between arg1 and arg3 is larger than arg2 and arg3
 						if(compareDistance(points[index], UB_points.get(index), point) == 0){
 							UB_points.set(index, point);
 						}
@@ -227,7 +231,7 @@ public class IKNN {
 		}
 		output = output.substring(0, output.length()-1);
 		this.candis = candidates.size();
-		System.out.println("Iteration: "+iteration+ " Candidates: "+candidates.size() + " Points:" +counter);
+		System.out.println("~ Iteration: "+iteration+ " Candidates: "+candidates.size() + " Points:" +counter);
 		return output;
 	}
 	 
