@@ -83,7 +83,6 @@ public class GH {
 		// Stores candidate trajectories
 		HashMap<String, ArrayList<Point>> candidates = new HashMap<String, ArrayList<Point>>();
 		Queue<Element> GH = new PriorityQueue<>();
-		
 		double inc = Settings.tree_inc; 
 		for (int i = 0; i < points.length; i++) {
 			rad[i] = inc;
@@ -91,6 +90,7 @@ public class GH {
 			long startTime = System.currentTimeMillis();
 			// finds intersecting points with region of current query point
 			this.getIntersectingPoints(S, rad[i], inc, points[i]);
+			
 			long stopTime = System.currentTimeMillis();
 			long elapsedTime = stopTime - startTime;
 			iotime += elapsedTime;
@@ -146,18 +146,22 @@ public class GH {
 						else{
 							pois.set(index, point);
 						}
-						int check  = 1;
-						for (int i = 0; i < pois.size(); i++) {
-							if(pois.get(i) == null){
-								check *= 0;
+						
+						if(!full.contains(id)){
+							int check  = 1;
+							for (int i = 0; i < pois.size(); i++) {
+								if(pois.get(i) == null){
+									check *= 0;
+								}
+							}
+							// checks whether we found full matching candidates
+							if(check == 1){
+								full_match++;
+								full.add(id);
+								//System.out.println("Full match: " + full_match);
 							}
 						}
-						// checks whether we found full matching candidates
-						if(check == 1){
-							full_match++;
-							full.add(id);
-							//System.out.println("Full match: " + full_match);
-						}
+						
 						candidates.put(id, pois);
 					}
 					// new candidate
@@ -184,17 +188,21 @@ public class GH {
 						// if slot is empty we add point directly
 						pois.set(index, point);
 					}
-					int check  = 1;
-					for (int i = 0; i < pois.size(); i++) {
-						if(pois.get(i) == null){
-							check *= 0;
+					
+					if(!full.contains(ids)){
+						int check  = 1;
+						for (int i = 0; i < pois.size(); i++) {
+							if(pois.get(i) == null){
+								check *= 0;
+							}
+						}
+						if(check == 1){
+							full_match++;
+							full.add(ids);
+							//System.out.println("Full match: " + full_match);
 						}
 					}
-					if(check == 1){
-						full_match++;
-						full.add(ids);
-						//System.out.println("Full match: " + full_match);
-					}
+					
 					candidates.put(ids, pois);
 				}
 				else{
@@ -206,7 +214,7 @@ public class GH {
 					candidates.put(ids, pois);
 				}
 			}
-			//System.out.println("Candidates:" + candidates.size());
+			
 			iteration++;
 		} 
 		// stores top-k results

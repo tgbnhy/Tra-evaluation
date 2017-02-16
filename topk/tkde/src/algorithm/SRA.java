@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
@@ -69,8 +70,8 @@ public class SRA {
 			// stores number of results for each query point
 			result[i]= 0;
 		}
-		
 		PriorityQueue<Candidate> topk = computeUBk(query, points); // compute k-th upper bound value
+		
 		best_dist = topk.peek().getDistance();
 		
 		for (int i = 0; i < points.length; i++) {
@@ -185,7 +186,6 @@ public class SRA {
 		}
 		
 		String output = "";
-		
 		// returning topk value separated by comma
 		while( topk.peek() != null) {
 			output += topk.poll().getID()+",";
@@ -193,6 +193,7 @@ public class SRA {
 		}
 		output = output.substring(0, output.length()-1);
 		this.candis = candidates.size();
+		
 		System.out.println("Iteration: "+iteration+ " Candidates:"+candidates.size() + " Points:" +counter);
 		return output;
 	}
@@ -200,18 +201,35 @@ public class SRA {
 	
 	private PriorityQueue<Candidate> updateUBk(Point []q, HashMap <String, ArrayList<Point>> c, PriorityQueue<Candidate> topk){
 		
+		HashSet<String> current = new HashSet<>();
+		PriorityQueue<Candidate> new_topk = new PriorityQueue<>(Collections.reverseOrder());
+		double tmp = 0;
+		while( topk.peek() != null) {
+			Candidate tmp_can= topk.poll();
+			tmp = computeCandidateDistance(c.get(tmp_can.getID()), q);
+			if(tmp < tmp_can.getDistance()){
+				new_topk.add(new Candidate(tmp, tmp_can.getID()));
+			}
+			else{
+				new_topk.add(tmp_can);
+			}
+			current.add(tmp_can.getID());
+		}
+		
 		for (Map.Entry<String, ArrayList<Point>> entry : c.entrySet()) {
 			// compute aggregated distance of candidate to query points
-			double tmp = computeCandidateDistance(entry.getValue(), q);
+			tmp = computeCandidateDistance(entry.getValue(), q);
 			// if we found shorter distance topk is updated
-			if(topk.peek().getDistance() > tmp){
-				topk.poll();
-				topk.add(new Candidate(tmp, entry.getKey()));
+			if(new_topk.peek().getDistance() > tmp){
+				if(!current.contains(entry.getKey())){
+					new_topk.poll();
+					new_topk.add(new Candidate(tmp, entry.getKey()));
+				}
 			}			
 		    
 		}
 		
-		return topk;
+		return new_topk;
 	}
 	
 	private PriorityQueue<Candidate> computeUBk(Region query, Point []points){
@@ -225,7 +243,7 @@ public class SRA {
 			// computing distance and adding in queue
 			double tmp = computeTotalDistance(entry.getKey(), points);
 			topk.add(new Candidate(tmp, entry.getValue()));
-			
+			//System.out.println("Top:" + entry.getValue());
 			//System.out.println("ANN: " + entry.getValue() + " " + entry.getKey().getCoord(0) + "," +entry.getKey().getCoord(1) );
 			// if queue size is greater than k value we remove maximum distance
 			if(topk.size() == (Settings.k+1)){
@@ -237,25 +255,32 @@ public class SRA {
 	}
 	
 	public int getANN(HashMap<Point, String> k_ANN, int k, Region r){
-		
-		MyVisitor v = new MyVisitor();
-		// finds nearest neighbors and stores in MyVisitor object
-		tree.nearestNeighborQuery(k, r, v); 
-		
-		for (Map.Entry<Integer, IShape> entry : v.answers.entrySet()) {
-		    //int key = entry.getKey();
-		    IShape value = entry.getValue();
-		    // finds corresponding trajectory IDs for each point
-		    String []ids = trips.get(value.getCenter()[0]+","+value.getCenter()[1]).split(",");
-		    for (String id : ids) {
-		    	double[] p = {value.getCenter()[0], value.getCenter()[1]};	
-		    	k_ANN.put(new Point(p), id);
-		    	// stops if we found k results
-		    	if(k_ANN.size() == Settings.k){
-		    		return 1;
-		    	}
-		    }	
+		int check = 0;
+		while(check == 0){
+			MyVisitor v = new MyVisitor();
+			// finds nearest neighbors and stores in MyVisitor object
+			tree.nearestNeighborQuery(k, r, v);
+			for (Map.Entry<Integer, IShape> entry : v.answers.entrySet()) {
+			    //int key = entry.getKey();
+			    IShape value = entry.getValue();
+			    // finds corresponding trajectory IDs for each point
+			    String []ids = trips.get(value.getCenter()[0]+","+value.getCenter()[1]).split(",");
+			    for (String id : ids) {
+			    	if(!k_ANN.containsValue(id)){
+			    		double[] p = {value.getCenter()[0], value.getCenter()[1]};	
+				    	k_ANN.put(new Point(p), id);
+				    	// stops if we found k results
+			    	}
+			    	
+			    	if(k_ANN.size() == Settings.k){
+			    		check = 1;
+			    		return 1;
+			    	}
+			    }	
+			}
+			k += k;
 		}
+		
 		return 0;
 	 } 
 	 

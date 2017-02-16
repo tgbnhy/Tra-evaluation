@@ -57,7 +57,7 @@ public class PlaceServlet extends HttpServlet {
     public PlaceServlet() throws Exception {
         //super();
         // TODO Auto-generated constructor stub
-    	ds = new Dataset("root", "rmit12345");
+    	ds = new Dataset("root", "");
 		conn = ds.Connect();
 		
 		String index_file = Settings.rtree_index_location;
@@ -76,7 +76,7 @@ public class PlaceServlet extends HttpServlet {
 		//alg5 = new QE(tree, file);
 		
 		Grid g = new Grid(Settings.dimension, Settings.size);
-		alg5 = new SGRA(g, file);
+		alg5 = new SGRA(g, file, tree);
 		
     }
 
@@ -117,29 +117,34 @@ public class PlaceServlet extends HttpServlet {
 		long sra_avg_querytime = 0;
 		long sra_avg_ann = 0;
 		long sra_avg_candis = 0;
+		String sra_ids = "";
 		
 		long sgra_avg_iotime = 0;
 		long sgra_avg_querytime = 0;
 		long sgra_avg_ann = 0;
 		long sgra_avg_candis = 0;
+		String sgra_ids = "";
 		
 		long iknn_avg_iotime = 0;
 		long iknn_avg_querytime = 0;
 		long iknn_avg_candis = 0;
+		String iknn_ids = "";
 		
 		long gh_avg_iotime = 0;
 		long gh_avg_querytime = 0;
 		long gh_avg_candis = 0;
+		String gh_ids = "";
 		
 		long qe_avg_iotime = 0;
 		long qe_avg_querytime = 0;
 		long qe_avg_candis = 0;
+		String qe_ids = "";
 		
 		int count = 0;
-		int q = 6;
+		int q = 4;
 		String locs = "";
 		try {
-		   InputStreamReader read = new InputStreamReader(new FileInputStream("/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/newyork/low/"+q+"-locations.txt"), "utf-8");
+		   InputStreamReader read = new InputStreamReader(new FileInputStream("E:\\University\\PhD\\Publication\\Dataset\\query\\newyork\\low\\"+q+"-location.txt"), "utf-8");
 		   BufferedReader reader = new BufferedReader(read);
 		   String line;
 		   int limit = 0;
@@ -164,21 +169,21 @@ public class PlaceServlet extends HttpServlet {
 				Region query = calculateRegion(arr);
 				
 				long startTime = System.currentTimeMillis();
-				ids = alg1.computeIKNN(query, points);
+				iknn_ids = alg1.computeIKNN(query, points);
 				long stopTime = System.currentTimeMillis();
 				iknn_avg_iotime += alg1.iotime;
 				iknn_avg_querytime += (stopTime - startTime);
 				iknn_avg_candis += alg1.candis;
 				
 				startTime = System.currentTimeMillis();
-				ids = alg2.computeGH(query, points);
+				gh_ids = alg2.computeGH(query, points);
 				stopTime = System.currentTimeMillis();
 				gh_avg_iotime += alg2.iotime;
 				gh_avg_querytime += (stopTime - startTime);
 				gh_avg_candis += alg2.candis;
 				
 				startTime = System.currentTimeMillis();
-				ids = alg4.computeSRA(query, points);
+				sra_ids = alg4.computeSRA(query, points);
 				stopTime = System.currentTimeMillis();
 				sra_avg_ann += alg4.ann;
 				sra_avg_iotime += alg4.iotime;
@@ -186,7 +191,7 @@ public class PlaceServlet extends HttpServlet {
 				sra_avg_candis += alg4.candis;
 				
 				startTime = System.currentTimeMillis();
-				ids = alg5.computeSGRA(query, points);
+				sgra_ids = alg5.computeSGRA(query, points);
 				stopTime = System.currentTimeMillis();
 				sgra_avg_ann += alg5.ann;
 				sgra_avg_iotime += alg5.iotime;
@@ -213,6 +218,7 @@ public class PlaceServlet extends HttpServlet {
 		}
 		
 		System.out.println();
+		
 		System.out.println("Query: IKNN - " + (iknn_avg_querytime/count) + " GH - " + (gh_avg_querytime/count) + " SRA - " + (sra_avg_querytime/count) + " SGRA - " + (sgra_avg_querytime/count));
 		System.out.println("IO: IKNN - " + (iknn_avg_iotime/count) + " GH - " + (gh_avg_iotime/count)  + " SRA - " + (sra_avg_iotime/count) + " SGRA - " + (sgra_avg_iotime/count));
 		System.out.println("Candidates: IKNN - " + (iknn_avg_candis/count) + " GH - " + (gh_avg_candis/count)  + " SRA - " + (sra_avg_candis/count) + " SGRA - " + (sgra_avg_candis/count));

@@ -80,94 +80,97 @@ public class Test {
 		String FilePath = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/newyork/low/4-locations.txt";
 		InputStreamReader read = new InputStreamReader(new FileInputStream(FilePath), "utf-8");
 		BufferedReader reader = new BufferedReader(read);
-		String line = reader.readLine();
 		
-		String locs = line;
-		//String locs = "40.728328704833984,-73.99295806884766,40.72578048706055,-73.99031829833984";
-		String []pois = locs.split(",");
 		
-		int num = pois.length/2;
-		double [][]arr = new double[num][2];
-		int j = 0;
-		for (int i = 0; i < arr.length; i++) {
-			arr[i][0] = Double.parseDouble(pois[j]);
-			arr[i][1] = Double.parseDouble(pois[j+1]);
-			j+=2;
-		}
-		
-		Point []points = new Point[num];
-		for (int i = 0; i < points.length; i++) {
-			points[i] = new Point(arr[i]);
+		String line;
+		int counter = 0;
+		while ((line = reader.readLine()) != null && counter < 2) {
+
+			counter++;
+			String locs = line;
+			// String locs =
+			// "40.728328704833984,-73.99295806884766,40.72578048706055,-73.99031829833984";
+			String[] pois = locs.split(",");
+
+			int num = pois.length / 2;
+			double[][] arr = new double[num][2];
+			int j = 0;
+			for (int i = 0; i < arr.length; i++) {
+				arr[i][0] = Double.parseDouble(pois[j]);
+				arr[i][1] = Double.parseDouble(pois[j + 1]);
+				j += 2;
+			}
+
+			Point[] points = new Point[num];
+			for (int i = 0; i < points.length; i++) {
+				points[i] = new Point(arr[i]);
+
+			}
+
+			Region query = calculateRegion(arr);
+
+			/*
+			 * while( queue.peek() != null) { val = queue.poll();
+			 * System.out.println(val); }
+			 */
+
+			// System.out.println("Value: " + Math.exp(1) + " " + Math.exp(-1) +
+			// " " + Math.exp(-0.5));
+			// alg.computeIKNN(query, points, 10);
+			//
+			long startTime = System.currentTimeMillis();
+			String ids = alg.computeIKNN(query, points);
+			long stopTime = System.currentTimeMillis();
+			bw.write((stopTime - startTime) + "\n" + alg.iotime);
+			bw.newLine();
+			bw.write(ids);
+			bw.newLine();
+			System.out.println("IKNN query runtime: " + (stopTime - startTime) + " \nIO: " + alg.iotime);
+			System.out.println("ID: " + ids);
+
+			startTime = System.currentTimeMillis();
+			ids = alg1.computeGH(query, points);
+			stopTime = System.currentTimeMillis();
+			bw.write((stopTime - startTime) + "\n" + alg1.iotime);
+			bw.newLine();
+			bw.write(ids);
+			bw.newLine();
+			System.out.println("GH query runtime: " + (stopTime - startTime) + " \nIO: " + alg1.iotime);
+			System.out.println("ID: " + ids);
+
+			startTime = System.currentTimeMillis();
+			ids = alg2.computeQE(query, points);
+			stopTime = System.currentTimeMillis();
+			bw.write((stopTime - startTime) + "\n" + alg2.iotime);
+			bw.newLine();
+			bw.write(ids);
+			bw.newLine();
+			System.out.println("QE query runtime: " + (stopTime - startTime) + " \nIO: " + alg2.iotime);
+			System.out.println("ID: " + ids);
+
+			startTime = System.currentTimeMillis();
+			ids = alg3.computeSRA(query, points);
+			stopTime = System.currentTimeMillis();
+			bw.write((stopTime - startTime) + "\n" + alg3.iotime);
+			bw.newLine();
+			bw.write(ids);
+			bw.newLine();
+			System.out.println("SRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg3.iotime);
+			System.out.println("ID: " + ids);
+
+			startTime = System.currentTimeMillis();
+			ids = alg4.computeSGRA(query, points);
+			stopTime = System.currentTimeMillis();
+			bw.write((stopTime - startTime) + "\n" + alg4.iotime);
+			bw.newLine();
+			bw.write(ids);
+			bw.newLine();
 			
+			System.out.println("SGRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg4.iotime);
+			System.out.println("ID: " + ids);
+
 		}
-		
-		Region query = calculateRegion(arr);
-		
-		
-		/*
-		while( queue.peek() != null) {
-		    val = queue.poll();
-			System.out.println(val);
-		}
-		*/
-		
-		//System.out.println("Value: " + Math.exp(1) + " " + Math.exp(-1) + " " + Math.exp(-0.5));
-		//alg.computeIKNN(query, points, 10);
-		//
-		long startTime = System.currentTimeMillis();
-		String ids = alg.computeIKNN(query, points);
-		long stopTime = System.currentTimeMillis();
-		bw.write("IKNN query runtime: " + (stopTime - startTime) + " \nIO: " + alg.iotime);
-		bw.newLine();
-		bw.write("ID: " + ids);
-		bw.newLine();
-		System.out.println("IKNN query runtime: " + (stopTime - startTime) + " \nIO: " + alg.iotime);
-		System.out.println("ID: " + ids);
-		
-		startTime = System.currentTimeMillis();
-		ids = alg1.computeGH(query, points);
-		stopTime = System.currentTimeMillis();
-		bw.write("GH query runtime: " + (stopTime - startTime) + " \nIO: " + alg1.iotime);
-		bw.newLine();
-		bw.write("ID: " + ids);
-		bw.newLine();
-		System.out.println("GH query runtime: " + (stopTime - startTime) + " \nIO: " + alg1.iotime);
-		System.out.println("ID: " + ids);
-		
-		startTime = System.currentTimeMillis();
-		ids = alg2.computeQE(query, points);
-		stopTime = System.currentTimeMillis();
-		bw.write("QE query runtime: " + (stopTime - startTime) + " \nIO: " + alg2.iotime);
-		bw.newLine();
-		bw.write("ID: " + ids);
-		bw.newLine();
-		System.out.println("QE query runtime: " + (stopTime - startTime) + " \nIO: " + alg2.iotime);
-		System.out.println("ID: " + ids);		
-		
-		startTime = System.currentTimeMillis();
-		ids = alg3.computeSRA(query, points);
-		stopTime = System.currentTimeMillis();
-		bw.write("SRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg3.iotime);
-		bw.newLine();
-		bw.write("ID: " + ids);
-		bw.newLine();
-		System.out.println("SRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg3.iotime);
-		System.out.println("ID: " + ids);
-		
-		
-		startTime = System.currentTimeMillis();
-		ids = alg4.computeSGRA(query, points);
-		stopTime = System.currentTimeMillis();
-		bw.write("SGRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg4.iotime);
-		bw.newLine();
-		bw.write("ID: " + ids);
-		bw.newLine();
 		bw.close();
-		System.out.println("SGRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg4.iotime);
-		System.out.println("ID: " + ids);
-		
-		
-		
 		/*
 		Dataset ds = new Dataset("root", "");
 		Connection conn = ds.Connect();

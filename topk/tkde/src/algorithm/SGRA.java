@@ -9,6 +9,7 @@ import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
@@ -22,6 +23,7 @@ import spatialindex.storagemanager.PropertySet;
 
 public class SGRA {
 	private Grid grid;
+	private RTree tree;
 	private TreeMap<Double,Point> T;
 	private HashMap<String,String> trips;
 	private HashMap<Integer, Integer> grids;
@@ -31,8 +33,9 @@ public class SGRA {
 	public long ann;
 	public long candis;
 	
-	public SGRA(Grid g, String file) throws IOException{
+	public SGRA(Grid g, String file, RTree tree) throws IOException{
 		this.grid = g;
+		this.tree = tree;
 		// reading trip ID information from file
 		this.trips = this.readTrips(file);
 		this.grids = new HashMap<Integer, Integer>();
@@ -120,7 +123,8 @@ public class SGRA {
 			norm_points[i] = p;
 		}
 		
-		PriorityQueue<Candidate> topk = computeUBk(norm_points[0], points);
+		PriorityQueue<Candidate> topk = computeUBk(query, points);
+		
 		best_dist = topk.peek().getDistance();
 		
 		long end = System.currentTimeMillis();
@@ -257,33 +261,51 @@ public class SGRA {
 	
 	private PriorityQueue<Candidate> updateUBk(Point []q, HashMap <String, ArrayList<Point>> c, PriorityQueue<Candidate> topk){
 		
+		HashSet<String> current = new HashSet<>();
+		PriorityQueue<Candidate> new_topk = new PriorityQueue<>(Collections.reverseOrder());
+		double tmp = 0;
+		while( topk.peek() != null) {
+			Candidate tmp_can= topk.poll();
+			tmp = computeCandidateDistance(c.get(tmp_can.getID()), q);
+			if(tmp < tmp_can.getDistance()){
+				new_topk.add(new Candidate(tmp, tmp_can.getID()));
+			}
+			else{
+				new_topk.add(tmp_can);
+			}
+			current.add(tmp_can.getID());
+		}
+		
 		for (Map.Entry<String, ArrayList<Point>> entry : c.entrySet()) {
 			// compute aggregated distance of candidate to query points
-			double tmp = computeCandidateDistance(entry.getValue(), q);
+			tmp = computeCandidateDistance(entry.getValue(), q);
 			// if we found shorter distance topk is updated
-			if(topk.peek().getDistance() > tmp){
-				topk.poll();
-				topk.add(new Candidate(tmp, entry.getKey()));
+			if(new_topk.peek().getDistance() > tmp){
+				if(!current.contains(entry.getKey())){
+					new_topk.poll();
+					new_topk.add(new Candidate(tmp, entry.getKey()));
+				}
 			}			
 		    
 		}
 		
-		return topk;
+		return new_topk;
 	}
 	
-	private PriorityQueue<Candidate> computeUBk(Point p, Point []points){
+private PriorityQueue<Candidate> computeUBk(Region query, Point []points){
 		
 		HashMap<Point, String> k_ANN = new HashMap<Point, String>();
 		PriorityQueue<Candidate> topk = new PriorityQueue<>(Collections.reverseOrder());
-		// finds k points to set initial upper bound value
-		int result = this.getANN(k_ANN, Settings.k, p);
+		// finds k points where aggregated distance to query is minimum
+		int result = this.getANN(k_ANN, Settings.k, query);
 		
 		for (Map.Entry<Point, String> entry : k_ANN.entrySet()) {
+			// computing distance and adding in queue
 			double tmp = computeTotalDistance(entry.getKey(), points);
 			topk.add(new Candidate(tmp, entry.getValue()));
-			
+			//System.out.println("Top:" + entry.getValue());
 			//System.out.println("ANN: " + entry.getValue() + " " + entry.getKey().getCoord(0) + "," +entry.getKey().getCoord(1) );
-			
+			// if queue size is greater than k value we remove maximum distance
 			if(topk.size() == (Settings.k+1)){
 				topk.poll();
 			}
@@ -292,25 +314,33 @@ public class SGRA {
 		return topk;
 	}
 	
-	public int getANN(HashMap<Point, String> k_ANN, int k, Point p){
+	public int getANN(HashMap<Point, String> k_ANN, int k, Region r){
+		int check = 0;
+		while(check == 0){
+			MyVisitor v = new MyVisitor();
+			// finds nearest neighbors and stores in MyVisitor object
+			tree.nearestNeighborQuery(k, r, v);
+			for (Map.Entry<Integer, IShape> entry : v.answers.entrySet()) {
+			    //int key = entry.getKey();
+			    IShape value = entry.getValue();
+			    // finds corresponding trajectory IDs for each point
+			    String []ids = trips.get(value.getCenter()[0]+","+value.getCenter()[1]).split(",");
+			    for (String id : ids) {
+			    	if(!k_ANN.containsValue(id)){
+			    		double[] p = {value.getCenter()[0], value.getCenter()[1]};	
+				    	k_ANN.put(new Point(p), id);
+				    	// stops if we found k results
+			    	}
+			    	
+			    	if(k_ANN.size() == Settings.k){
+			    		check = 1;
+			    		return 1;
+			    	}
+			    }	
+			}
+			k += k;
+		}
 		
-		Region q = new Region(p, p);
-		// finds intersecting cell with given point
-		String cell =  grid.getIntersection(grid.zordered_mbrs, q);
-		//finds all points within cell
-		ArrayList<Point> tmp_points = getPointsByCell(Integer.valueOf(cell.split(",")[0])-1); 
-		
-		for (int i = 0; i < tmp_points.size(); i++) {
-			//adds trajectory IDs to hash map
-			String []ids = trips.get(tmp_points.get(i).getCenter()[0]+","+tmp_points.get(i).getCenter()[1]).split(",");
-			for (String id : ids) {
-				
-				k_ANN.put(tmp_points.get(i), id);
-				if(k_ANN.size() == Settings.k){
-					return 1;
-				}
-			}	
-		}		
 		return 0;
 	 } 
 	 
