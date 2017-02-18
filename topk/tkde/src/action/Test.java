@@ -51,7 +51,7 @@ public class Test {
 
 	public static void main(String[] args)throws Exception
 	{
-		File ressult_file = new File("/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/result.txt");
+		File ressult_file = new File("/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/runtime.txt");
 		FileWriter fw = new FileWriter(ressult_file.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
 		
@@ -74,7 +74,7 @@ public class Test {
 		SRA alg3 =  new SRA(tree, file);
 		
 		Grid g = new Grid(Settings.dimension, Settings.size);
-		SGRA alg4 =  new SGRA(g, file);
+		SGRA alg4 =  new SGRA(g, file, tree);
 		//String locs = request.getParameter("locs");
 		
 		String FilePath = "/Users/marco/Documents/Document-Marcos-MacBook-Pro/Australia/RMIT/Code/Code/Dataset/newyork/low/4-locations.txt";
@@ -83,10 +83,8 @@ public class Test {
 		
 		
 		String line;
-		int counter = 0;
-		while ((line = reader.readLine()) != null && counter < 2) {
+		while ((line = reader.readLine()) != null) {
 
-			counter++;
 			String locs = line;
 			// String locs =
 			// "40.728328704833984,-73.99295806884766,40.72578048706055,-73.99031829833984";
@@ -121,50 +119,60 @@ public class Test {
 			long startTime = System.currentTimeMillis();
 			String ids = alg.computeIKNN(query, points);
 			long stopTime = System.currentTimeMillis();
-			bw.write((stopTime - startTime) + "\n" + alg.iotime);
+			bw.write((stopTime - startTime)+"");
 			bw.newLine();
-			bw.write(ids);
-			bw.newLine();
+//			bw.write(""+alg.iotime);
+//			bw.newLine();
+//			bw.write(ids);
+//			bw.newLine();
 			System.out.println("IKNN query runtime: " + (stopTime - startTime) + " \nIO: " + alg.iotime);
 			System.out.println("ID: " + ids);
 
 			startTime = System.currentTimeMillis();
 			ids = alg1.computeGH(query, points);
 			stopTime = System.currentTimeMillis();
-			bw.write((stopTime - startTime) + "\n" + alg1.iotime);
+			bw.write((stopTime - startTime)+"");
 			bw.newLine();
-			bw.write(ids);
-			bw.newLine();
+//			bw.write(""+alg1.iotime);
+//			bw.newLine();
+//			bw.write(ids);
+//			bw.newLine();	
 			System.out.println("GH query runtime: " + (stopTime - startTime) + " \nIO: " + alg1.iotime);
 			System.out.println("ID: " + ids);
 
 			startTime = System.currentTimeMillis();
 			ids = alg2.computeQE(query, points);
 			stopTime = System.currentTimeMillis();
-			bw.write((stopTime - startTime) + "\n" + alg2.iotime);
+			bw.write((stopTime - startTime)+"");
 			bw.newLine();
-			bw.write(ids);
-			bw.newLine();
+//			bw.write(""+alg2.iotime);
+//			bw.newLine();
+//			bw.write(ids);
+//			bw.newLine();
 			System.out.println("QE query runtime: " + (stopTime - startTime) + " \nIO: " + alg2.iotime);
 			System.out.println("ID: " + ids);
 
 			startTime = System.currentTimeMillis();
 			ids = alg3.computeSRA(query, points);
 			stopTime = System.currentTimeMillis();
-			bw.write((stopTime - startTime) + "\n" + alg3.iotime);
+			bw.write((stopTime - startTime)+"");
 			bw.newLine();
-			bw.write(ids);
-			bw.newLine();
+//			bw.write(""+alg3.iotime);
+//			bw.newLine();
+//			bw.write(ids);
+//			bw.newLine();
 			System.out.println("SRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg3.iotime);
 			System.out.println("ID: " + ids);
 
 			startTime = System.currentTimeMillis();
 			ids = alg4.computeSGRA(query, points);
 			stopTime = System.currentTimeMillis();
-			bw.write((stopTime - startTime) + "\n" + alg4.iotime);
+			bw.write((stopTime - startTime)+"");
 			bw.newLine();
-			bw.write(ids);
-			bw.newLine();
+//			bw.write(""+alg4.iotime);
+//			bw.newLine();
+//			bw.write(ids);
+//			bw.newLine();
 			
 			System.out.println("SGRA query runtime: " + (stopTime - startTime) + " \nIO: " + alg4.iotime);
 			System.out.println("ID: " + ids);
