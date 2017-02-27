@@ -1,0 +1,9 @@
+plot "runtime_high.txt" u 1:2 title "IKNN" w l, "" u 1:3 title "GH" w l, "" u 1:4 title "SRA" w l, "" u 1:5 title "SGRA" w l
+
+set grid
+set xlabel "query points"
+set ylabel "run time"
+set title "Top-K Query Evaluation"
+set output "high_run_time.png"
+set terminal png
+replot
