@@ -1,5 +1,0 @@
-IKNN total time: 50003.0 : avg time: 537.6666666666666
-GH total time: 16240.0 : avg time: 174.6236559139785
-QE total time : 0.0 : avg time: 0.0
-SRA total time : 4284.0 : avg time: 46.064516129032256
-SGRA total time : 6599.0 : avg time: 70.95698924731182
