@@ -11,7 +11,7 @@ set rmargin 2
 set lmargin 6
 set bmargin 2
 
-set xrange [ 0: ]
+#set xrange [ 0: ]
 set yrange [ 0: ]
 set ytics font \"Helvetica-Bold, 24\"
 set xtics offset 0,0.5 font \"Helvetica-Bold, 24\"
@@ -23,10 +23,10 @@ set key left font ',20' spacing 1.5
 set boxwidth 0.8
 set size 1,1
 
-plot '${source_file}' u 1:2 title \"IKNN\" w lp lt 1 lw 5 pt 1 ps 4 lc rgb \"red\",\
-     '${source_file}' u 1:3 title \"GH\" w lp lt 2 lw 5 pt 2 ps 4 lc rgb \"blue\",\
-     '${source_file}' u 1:4 title \"SRA\" w lp lt 3 lw 5 pt 3 ps 4 lc rgb \"green\",\
-     '${source_file}' u 1:5 title \"SGRA\" w lp lt 4 lw 5 pt 4 ps 4 lc rgb \"gold\"
+plot '${source_file}' u 1:2 title \"IKNN\" w lp lt 1 lw 5 pt 1 ps 4 lc rgb \"black\",\
+     '${source_file}' u 1:3 title \"GH\" w lp lt 2 lw 5 pt 2 ps 4 lc rgb \"black\",\
+     '${source_file}' u 1:4 title \"SRA\" w lp lt 3 lw 5 pt 3 ps 4 lc rgb \"black\",\
+     '${source_file}' u 1:5 title \"SGRA\" w lp lt 4 lw 5 pt 4 ps 4 lc rgb \"black\"
 "
 
 echo "$cmd" | gnuplot
