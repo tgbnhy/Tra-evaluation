@@ -1,5 +1,5 @@
-source_file="../processed_result/runtime_high.txt"
-eps_file="../runtime_high.eps"
+source_file="../processed_result/runtime_low_density_10k.txt"
+eps_file="../runtime_low_density_10k.eps"
 
 cmd="
 
@@ -24,9 +24,9 @@ set boxwidth 0.8
 set size 1,1
 
 plot '${source_file}' u 1:2 title \"IKNN\" w lp lt 1 lw 5 pt 1 ps 4 lc rgb \"black\",\
-'${source_file}' u 1:3 title \"GH\" w lp lt 2 lw 5 pt 2 ps 4 lc rgb \"black\",\
-'${source_file}' u 1:4 title \"SRA\" w lp lt 3 lw 5 pt 3 ps 4 lc rgb \"black\",\
-'${source_file}' u 1:5 title \"SGRA\" w lp lt 4 lw 5 pt 4 ps 4 lc rgb \"black\"
+     '${source_file}' u 1:3 title \"GH\" w lp lt 2 lw 5 pt 2 ps 4 lc rgb \"black\",\
+     '${source_file}' u 1:4 title \"SRA\" w lp lt 3 lw 5 pt 3 ps 4 lc rgb \"black\",\
+     '${source_file}' u 1:5 title \"SGRA\" w lp lt 4 lw 5 pt 4 ps 4 lc rgb \"black\"
 "
 
 echo "$cmd" | gnuplot

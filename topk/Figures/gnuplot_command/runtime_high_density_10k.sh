@@ -1,5 +1,5 @@
-source_file="../processed_result/runtime_medium.txt"
-eps_file="../runtime_medium.eps"
+source_file="../processed_result/runtime_high_density_10k.txt"
+eps_file="../runtime_high_density_10k.eps"
 
 cmd="
 
